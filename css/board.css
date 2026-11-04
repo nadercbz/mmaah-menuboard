@@ -1,0 +1,127 @@
+/* Mmaah Menuboard. Jeder Screen ist 1080 x 1920 Pixel und wird als Ganzes skaliert.
+   National 2 ist lizenziert und kommt nur vom Rechner (local), online springt Archivo ein. Das Video wird lokal mit National 2 gerendert. */
+@font-face { font-family: "MB Display"; src: local("National 2 Black"), local("National2-Black"), url(../assets/fonts/archivo.woff2) format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "MB Text"; src: local("National 2 Medium"), local("National2-Medium"), url(../assets/fonts/geist.woff2) format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "MB Han"; src: url(../assets/fonts/blackhansans.woff2) format("woff2"); font-display: block; }
+
+:root { --o: #ff4005; --p: #4f0423; --b: #3b8bff; --g: #fde233; --c: #fcfaf7; --gruen: #3db11f; --hgruen: #a6d98f; }
+* { box-sizing: border-box; margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+.tv { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--p); color: var(--c); font-family: "MB Text", sans-serif; font-weight: 500; transform-origin: 0 0; user-select: none; }
+.d { font-family: "MB Display", sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -.014em; line-height: .86; }
+.han { font-family: "MB Han", sans-serif; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.fit { display: block; white-space: nowrap; width: max-content; }
+
+/* Preis wie in der Mmaah Karte: hochgestellte Cent */
+.pr { display: inline-flex; align-items: flex-start; font-family: "MB Display", sans-serif; font-weight: 900; color: var(--g); line-height: .9; letter-spacing: -.02em; font-size: 58px; white-space: nowrap; }
+.pr sup { font-size: .56em; line-height: 1; margin-top: .02em; letter-spacing: 0; }
+.pr i { font-style: normal; font-size: .72em; margin-left: .04em; margin-top: .06em; }
+
+/* Zeichen */
+.tg { display: inline-flex; gap: 6px; vertical-align: -.1em; margin-left: .22em; }
+.ic { width: .9em; height: .9em; display: inline-block; flex: none; }
+
+/* Hero */
+.hero { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; }
+.hero--o { background: var(--o); } .hero--b { background: var(--b); } .hero--g { background: var(--g); color: var(--p); }
+.h-titel { position: absolute; left: 44px; top: 40px; z-index: 3; }
+.h-unter { position: absolute; left: 44px; z-index: 3; font-size: 29px; line-height: 1.14; font-weight: 500; }
+.h-logo { position: absolute; right: 40px; z-index: 5; width: 206px; }
+.h-logo svg { display: block; width: 100%; height: auto; }
+.h-akt { position: absolute; inset: 0; will-change: transform, opacity; visibility: hidden; }
+.h-bild { position: absolute; will-change: transform; }
+.h-bild img, .h-bild canvas { display: block; width: 100%; height: auto; }
+.siegel { position: absolute; z-index: 4; will-change: transform; color: var(--p); display: flex; align-items: center; justify-content: center; text-align: center; }
+.siegel svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.siegel > div { position: relative; }
+.siegel .pr { color: var(--p); font-size: 78px; }
+.s-name { font-size: 26px; display: block; margin-bottom: 7px; line-height: .94; }
+.siegel > div { max-width: 82%; }
+.teilchen { position: absolute; border-radius: 50%; z-index: 2; pointer-events: none; }
+
+/* Bereiche */
+.pille { display: inline-block; background: var(--o); color: var(--c); border-radius: 99px; padding: 11px 26px 9px; font-size: 36px; line-height: 1; }
+.pille--b { background: var(--b); } .pille--g { background: var(--g); color: var(--p); }
+.pille small { font: 500 23px/1 "MB Text", sans-serif; text-transform: none; letter-spacing: 0; margin-left: 12px; }
+.ber { position: absolute; left: 36px; right: 36px; }
+.kopf-z { display: flex; align-items: center; gap: 18px; font-size: 25px; }
+
+/* Kacheln */
+.kachel { position: absolute; display: flex; flex-direction: column; transition: opacity .35s, filter .35s; border-radius: 22px; }
+.k-bild { display: flex; align-items: center; justify-content: center; flex: 1 1 0; min-height: 0; will-change: transform; }
+.k-bild img { max-width: 100%; max-height: 100%; display: block; object-fit: contain; }
+.k-bild .ill { width: 58%; }
+.k-text { position: relative; flex: none; display: block; }
+.k--m .k-text { min-height: 94px; }
+.k--s .k-text { min-height: 56px; }
+.k--quer .k-text { min-height: 0; }
+.k-name { display: block; font-size: 33px; }
+.k-kurz { display: block; font-size: 20.5px; line-height: 1.13; margin-top: 5px; opacity: .9; }
+.k-preis { display: inline-block; margin-top: 8px; will-change: transform; transform-origin: 0 60%; }
+.k--s .k-name { font-size: 25px; line-height: .98; } .k--s .k-kurz { display: none; } .k--s .pr { font-size: 40px; }
+.k--m .pr { font-size: 52px; }
+/* Preis Fähnchen direkt am Produkt, wie auf einem Fast Food Board */
+.k--m:not(.k--quer) .k-preis, .k--s .k-preis { position: absolute; right: 0; top: -54px; margin: 0; background: var(--g); border-radius: 14px; padding: 7px 12px 4px; transform-origin: 100% 100%; }
+.k--m:not(.k--quer) .k-preis .pr, .k--s .k-preis .pr { color: var(--p); }
+.k--s .k-preis { top: -48px; padding: 6px 10px 3px; }
+.k--mitkurz .k-kurz { display: block; font-size: 18.5px; }
+.k--mitkurz .k-text { min-height: 112px; }
+.k--m .pr { font-size: 46px; }
+.k--quer .k-preis { background: var(--g); border-radius: 14px; padding: 7px 12px 4px; }
+.k--quer .k-preis .pr { color: var(--p); }
+.k--quer { flex-direction: row; align-items: center; gap: 12px; }
+.k--quer .k-bild { flex: 0 0 52%; height: 100%; }
+.k--quer .k-text { flex: 1 1 0; }
+.zeile { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 6px; border-top: 3px solid var(--o); font-size: 33px; }
+.zeile:first-child { border-top: 0; }
+
+/* Getränkeliste im Hero */
+.liste { position: absolute; left: 44px; z-index: 3; width: 620px; color: var(--p); }
+.liste .reihe { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; align-items: center; width: 100%; padding: 8px 0 7px; border-top: 3px solid var(--p); transition: opacity .35s; }
+.liste .reihe:first-child { border-top: 0; }
+.liste .r-name { font-size: 33px; }
+.liste .r-kurz { font-size: 21px; line-height: 1.12; display: block; margin-top: 4px; }
+.liste .pr { color: var(--p); font-size: 50px; }
+.liste .r-menge { font-size: 19px; display: block; text-align: right; margin-top: 2px; }
+
+/* Dips */
+.dips { position: absolute; left: 0; right: 0; background: var(--o); display: flex; align-items: center; gap: 22px; padding: 0 36px; }
+.dips .d-t { font-size: 44px; }
+.dips .pr { color: var(--c); font-size: 54px; }
+.dips ul { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; padding: 0; flex: 1; font-size: 26px; font-weight: 600; }
+.dips li small { font-size: 18px; margin-left: 4px; }
+
+/* Fuß */
+.legende { position: absolute; left: 36px; right: 36px; display: flex; gap: 24px; align-items: center; font-size: 19px; white-space: nowrap; overflow: hidden; }
+.legende span { display: inline-flex; align-items: center; gap: 7px; }
+.ticker { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; background: var(--o); overflow: hidden; }
+.ticker-spur { position: absolute; left: 0; top: 0; height: 100%; display: flex; align-items: center; white-space: nowrap; will-change: transform; color: var(--c); font-size: 42px; }
+.ticker-spur > span { flex: none; width: 2160px; display: flex; justify-content: space-around; align-items: center; }
+
+/* Filter */
+.tv.gefiltert [data-tags]:not(.treffer) { opacity: .13; filter: grayscale(1); }
+.tv [data-tags].treffer .k-bild { filter: none; }
+
+/* Animation über alle drei Screens */
+.take { position: absolute; inset: 0; z-index: 30; background: var(--c); color: #000; visibility: hidden; will-change: transform; overflow: hidden; }
+.take .t-mitte { position: absolute; left: 40px; right: 40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+.flug { position: absolute; z-index: 31; visibility: hidden; will-change: transform; pointer-events: none; }
+.flug img { display: block; width: 100%; height: auto; }
+.flug--maske img { -webkit-mask-image: linear-gradient(180deg, #000 74%, transparent 90%); mask-image: linear-gradient(180deg, #000 74%, transparent 90%); }
+
+/* Detail bei Klick */
+.detail { position: absolute; inset: 0; z-index: 40; background: rgba(79, 4, 35, .94); display: none; padding: 60px 56px; flex-direction: column; color: var(--c); }
+.detail.an { display: flex; animation: dein .32s cubic-bezier(.2, .9, .2, 1); }
+@keyframes dein { from { opacity: 0; transform: translateY(40px) scale(.98); } }
+.detail .d-bild { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.detail .d-bild img, .detail .d-bild svg { max-width: 100%; max-height: 100%; display: block; }
+.detail h3 { font-size: 92px; margin: 24px 0 14px; }
+.detail .d-preise { display: flex; flex-wrap: wrap; gap: 14px 44px; align-items: flex-end; margin-bottom: 20px; }
+.detail .d-preise .pr { font-size: 106px; }
+.detail .d-preise small { display: block; font-size: 30px; margin-bottom: 8px; }
+.detail p { font-size: 34px; line-height: 1.2; margin-bottom: 14px; }
+.detail .d-al { font-size: 26px; opacity: .85; }
+.detail .d-zu { position: absolute; right: 36px; top: 36px; width: 84px; height: 84px; border-radius: 50%; background: var(--o); color: var(--c); font: 900 54px/84px "MB Display", sans-serif; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) { .detail.an { animation: none; } }

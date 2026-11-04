@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mmaah Menuboard, einzelner Screen</title>
+<link rel="stylesheet" href="css/board.css">
+<link rel="icon" href="assets/food/korean-fried-chicken-7st.webp">
+<style>html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden}#b{position:absolute;left:0;top:0}</style>
+</head>
+<body>
+<div id="b"></div>
+<script src="js/daten.js"></script>
+<script src="js/allergene.js"></script>
+<script src="js/board.js"></script>
+<script>
+/* Aufruf: tv.html?tv=1 bis 3 im Vollbild am Screen. Mit &export=1 steuert das Video Skript die Zeit. Alle Screens laufen über die Weltzeit synchron. */
+(function () {
+  var Q = new URLSearchParams(location.search), nr = +(Q.get("tv") || 1), exp = Q.has("export"), host = document.getElementById("b");
+  function passt() {
+    var s = Math.min(innerWidth / 1080, innerHeight / 1920);
+    host.style.transform = "translate(" + ((innerWidth - 1080 * s) / 2) + "px," + ((innerHeight - 1920 * s) / 2) + "px) scale(" + s + ")";
+  }
+  MB.start([{ el: host, nr: nr }], { art: "d" }).then(function () {
+    passt(); addEventListener("resize", passt);
+    if (exp) {
+      window.renderAt = function (t) { MB.zeit(t); };
+      MB.laden().then(function () { MB.zeit(0); window.BEREIT = true; });
+      return;
+    }
+    MB.laden();
+    (function schleife() { MB.zeit(Date.now() / 1000 % MB.LOOP); requestAnimationFrame(schleife); })();
+  });
+})();
+</script>
+</body>
+</html>
